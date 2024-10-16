@@ -1,6 +1,17 @@
-require_relative 'infra/db'
+require_relative 'models/cliente'
+require 'terminal-table'
 
 
-db = Infra::Db.new
-dados = db.execute("SELECT * FROM clientes")  # Corrija o nome da tabela se necessário
-puts dados.inspect
+clientes = Models::Cliente.new
+
+clientes = Models::Cliente.todos
+
+rows = []
+
+clientes.each do |cliente|
+  rows << [cliente.nome]
+end
+
+table = Terminal::Table.new :title => "Lista de Clientes", :headings => ['Nome'], :rows => rows
+
+puts table
