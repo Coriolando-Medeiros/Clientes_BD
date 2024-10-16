@@ -8,10 +8,14 @@ clientes = Models::Cliente.todos
 
 rows = []
 
-clientes.each do |cliente|
-  rows << [cliente.nome]
+rows = clientes.map do |cliente|
+  [cliente.id, cliente.nome, cliente.telefone, cliente.cpf]
 end
 
-table = Terminal::Table.new :title => "Lista de Clientes", :headings => ['Nome'], :rows => rows
+table = Terminal::Table.new(
+     :title => "Lista de Clientes",
+     :headings => ['ID', 'Nome', 'Telefone', 'CPF'],
+     :rows => rows
+)
 
 puts table
