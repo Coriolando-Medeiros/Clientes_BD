@@ -11,8 +11,9 @@ module ORM
         end
 
         def self.included(base)
-            tabela = DIO::tabela(base)
-            tabela = base.to_s.split("::").last.downcase + "s"
+            base.extend(MetodosClasse)
+            base.class_variable_set(:@@nome_tabela, DIO::tabela(base)) unless base.class_variable_defined?(:@@nome_tabela)
+            tabela = base.class_variable_get(:@@nome_tabela)
             dados = Infra::Db.new.execute("desc #{tabela}")
             atributos = dados.map{|dado| dado["Field"]}
             atributos.each do |atributo|
@@ -24,12 +25,14 @@ module ORM
                     instance_variable_get("@#{atributo}")
                 end
             end
-            base.extend(MetodosClasse)
+            self.extend(MetodosClasse)
         end
 
         module MetodosClasse
             def todos
-                tabela = DIO::tabela(self)
+                base.class_variable_set(:@@nome_tabela, DIO::tabela(self)) unless self.class_variable_defined?(:@@nome_tabela)
+                tabela = self.class_variable_get(:@@nome_tabela)
+
                 dados = Infra::Db.new.execute("select * from #{tabela}")
                 clientes = []
                 dados.each do |dado|
@@ -37,13 +40,12 @@ module ORM
                     obj.methods.each do |method|
                         if method.to_s.end_with?("=")
                             key = method.to_s.chomp("=")
-                            debugger
-                            instance_variable_set("@#{key}", dado[key])
+                            obj.send("#{key}=", dado[key])
                         end
                     end
                     clientes << obj
                 end
-                
+                return clientes
             end
         end
     end
