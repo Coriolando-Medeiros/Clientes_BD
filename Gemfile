@@ -11,3 +11,5 @@ gem 'mysql2'
 gem 'yaml'
 
 gem 'erb'
+
+gem 'colorize'
