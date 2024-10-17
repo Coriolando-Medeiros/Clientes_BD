@@ -40,5 +40,3 @@ table = Terminal::Table.new(
 )
 
 puts table
-
-
