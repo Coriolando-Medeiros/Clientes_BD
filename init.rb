@@ -34,6 +34,17 @@ def fornecedores
   puts table
 end
 
+def infos_cliente
+  cliente = Models::Cliente.new
+  puts "Adicionar Cliente"
+  print "Nome: "
+  nome = gets.chomp.capitalize
+  print "Tel: "
+  telefone = gets.chomp
+  print "CPF: "
+  cpf = gets.chomp
+  cliente.incluir
+end
 
 def menu
   loop do
