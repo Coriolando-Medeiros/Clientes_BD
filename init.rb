@@ -38,13 +38,44 @@ def infos_cliente
   cliente = Models::Cliente.new
   puts "Adicionar Cliente"
   print "Nome: "
-  nome = gets.chomp.capitalize
+  nome = gets.chomp
   print "Tel: "
   telefone = gets.chomp
   print "CPF: "
   cpf = gets.chomp
-  #puts "Eu sou: #{nome}, meu Telefone é: #{telefone} e meu CPF é: #{cpf}"
   cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
+  puts "Cliente incluido com sucesso!".green
+end
+def editar_cliente
+  puts "Editar Cliente"
+  clientes
+  puts "Indorme o ID do cliente a ser editado"
+  print "Id: "
+  id = gets.chomp.to_i
+  cliente = Models::Cliente.todos.find { |c| c.id == id}
+
+  if cliente.nil?
+    puts "Cliente com ID #{id} não encontrado!"
+    return
+  end
+
+  limpar_tela
+  puts "Digite os novos dados do cliente"
+  puts "(Enter) para manter"
+  print "Nome (atual: #{cliente.nome}: )"
+  novo_nome = gets.chomp
+  novo_nome = cliente.nome if novo_nome.empty?
+
+  print "Telefone (atual: #{cliente.telefone}: )"
+  novo_telefone = gets.chomp
+  novo_telefone = cliente.telefone if novo_telefone.empty?
+
+  print "CPF (atual: #{cliente.cpf}: )"
+  nvo_cpf = gets.chomp
+  novo_cpf = cliente.cpf if novo_cpf.empty?
+
+  cliente.editar(cliente.id, nome: novo_nome, telefone: novo_telefone, cpf: novo_cpf)
+  puts "Cliente atualizado com sucesso!".green
 end
 
 def infos_fornecedor
@@ -66,15 +97,26 @@ def infos_fornecedor
   fornecedor.incluir(nome:nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
 end
 
+def proseguir
+  puts "Enter para proseguir".blue
+  gets
+end
+
 def menu
   loop do
     #limpar_tela
-    puts "🌟" + " " * 18 + "Menu" + " " * 18 + "🌟".red
+    puts "🌟" + " " * 13 + "Menu" + " " * 13 + "🌟".red
     puts " " * 6 + "========================".blue
+    puts " " * 6 + "=========Cliente========".light_blue
     puts " " * 6 + "1 - Adicionar Cliente".light_blue
-    puts " " * 6 + "2 - Adicionar Fornecedor".light_blue
-    puts " " * 6 + "3 - Listar Clientes".light_blue
-    puts " " * 6 + "4 - Listar Fornecedores".light_blue
+    puts " " * 6 + "2 - Listar Clientes".light_blue
+    puts " " * 6 + "3 - Editar Cliente".light_blue
+    puts " " * 6 + "4 - Excluir Cliente".light_blue
+    puts " " * 6 + "========Fornecedor======".light_blue
+    puts " " * 6 + "5 - Adicionar Fornecedor".light_blue
+    puts " " * 6 + "6 - Listar Fornecedores".light_blue
+    puts " " * 6 + "7 - Editar Fornecedor".light_blue
+    puts " " * 6 + "8 - Excluir Fornecedor".light_blue
     puts " " * 6 + "0 - Sair".light_red
     puts " " * 6 + "========================".blue
     print "Opção: ".green
@@ -85,13 +127,31 @@ def menu
       infos_cliente
     elsif opcao == 2
       limpar_tela
-      infos_fornecedor
+      clientes
+      proseguir
     elsif opcao == 3
       limpar_tela
-      clientes
+      editar_cliente
+      proseguir
     elsif opcao == 4
       limpar_tela
+      puts "Em implementação"
+      proseguir
+    elsif opcao == 5
+      limpar_tela
+      infos_fornecedor
+    elsif opcao == 6
+      limpar_tela
       fornecedores
+      proseguir
+    elsif opcao == 7
+      limpar_tela
+      puts "Em implementação"
+      proseguir
+    elsif opcao == 8
+      limpar_tela
+      puts "Em implementação"
+      proseguir
     elsif opcao == 0
       limpar_tela
       puts "Saindo...".light_red
