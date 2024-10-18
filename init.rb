@@ -43,16 +43,36 @@ def infos_cliente
   telefone = gets.chomp
   print "CPF: "
   cpf = gets.chomp
-  cliente.incluir
+  #puts "Eu sou: #{nome}, meu Telefone é: #{telefone} e meu CPF é: #{cpf}"
+  cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
+end
+
+def infos_fornecedor
+  fornecedor = Models::Fornecedor.new
+  puts "Adicionar fornecedor"
+  print "Nome: "
+  nome = gets.chomp.capitalize
+  print "Tel: "
+  telefone = gets.chomp
+  print "CNPJ: "
+  cnpj = gets.chomp
+  print "Endereço: "
+  endereco = gets.chomp.downcase
+  print "Cidade: "
+  cidade = gets.chomp.capitalize
+  print "Estado: "
+  estado = gets.chomp.capitalize
+  endereco = "#{endereco} - #{cidade} - #{estado}"
+  fornecedor.incluir(nome:nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
 end
 
 def menu
   loop do
-    limpar_tela
+    #limpar_tela
     puts "🌟" + " " * 18 + "Menu" + " " * 18 + "🌟".red
     puts " " * 6 + "========================".blue
     puts " " * 6 + "1 - Adicionar Cliente".light_blue
-    puts " " * 6 + "1 - Adicionar Fornecedor".light_blue
+    puts " " * 6 + "2 - Adicionar Fornecedor".light_blue
     puts " " * 6 + "3 - Listar Clientes".light_blue
     puts " " * 6 + "4 - Listar Fornecedores".light_blue
     puts " " * 6 + "0 - Sair".light_red
@@ -65,7 +85,7 @@ def menu
       infos_cliente
     elsif opcao == 2
       limpar_tela
-      puts "Em implementação"
+      infos_fornecedor
     elsif opcao == 3
       limpar_tela
       clientes
@@ -84,3 +104,4 @@ def menu
 end
 
 menu
+
