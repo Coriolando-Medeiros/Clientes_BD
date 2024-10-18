@@ -72,6 +72,7 @@ def editar_cliente
 
   print "CPF (atual: #{cliente.cpf}: )"
   nvo_cpf = gets.chomp
+  debugger
   novo_cpf = cliente.cpf if novo_cpf.empty?
 
   cliente.editar(cliente.id, nome: novo_nome, telefone: novo_telefone, cpf: novo_cpf)
