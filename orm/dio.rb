@@ -12,25 +12,47 @@ module ORM
 
         def self.included(base)
             base.extend(MetodosClasse)
+            base.include(MetodosInstancia)
+
             base.class_variable_set(:@@nome_tabela, DIO::tabela(base)) unless base.class_variable_defined?(:@@nome_tabela)
             tabela = base.class_variable_get(:@@nome_tabela)
             dados = Infra::Db.new.execute("desc #{tabela}")
             atributos = dados.map{|dado| dado["Field"]}
             atributos.each do |atributo|
-                define_method("#{atributo}=") do |valor|
+                base.define_method("#{atributo}=") do |valor|
                     instance_variable_set("@#{atributo}", valor)
                 end
 
-                define_method("#{atributo}") do
+                base.define_method("#{atributo}") do
                     instance_variable_get("@#{atributo}")
                 end
             end
             self.extend(MetodosClasse)
         end
 
+        module MetodosInstancia
+            def incluir(atributos = {})
+              self.class.class_variable_set(:@@nome_tabela, DIO::tabela(self.class)) unless self.class.class_variable_defined?(:@@nome_tabela)
+              tabela = self.class.class_variable_get(:@@nome_tabela)
+          
+              colunas = []
+              params = []
+          
+              atributos.each do |coluna, valor|
+                colunas << coluna.to_s
+                instance_variable_set("@#{coluna}", valor)
+                params << valor
+              end
+          
+              sql = "insert into #{tabela}(#{colunas.join(",")}) values(#{(['?'] * colunas.size).join(",")})"
+          
+              Infra::Db.new.execute(sql, params)
+            end
+        end
+          
         module MetodosClasse
             def todos
-                base.class_variable_set(:@@nome_tabela, DIO::tabela(self)) unless self.class_variable_defined?(:@@nome_tabela)
+                self.class_variable_set(:@@nome_tabela, DIO::tabela(self)) unless self.class_variable_defined?(:@@nome_tabela)
                 tabela = self.class_variable_get(:@@nome_tabela)
 
                 dados = Infra::Db.new.execute("select * from #{tabela}")
