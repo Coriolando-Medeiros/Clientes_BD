@@ -63,6 +63,7 @@ module ORM
 
                 params << id
 
+                debugger
                 sql = "UPDATE #{tabela} SET #{set_clauses.join(", ")} WHERE id = ?"
 
                 Infra::Db.new.execute(sql, params)
