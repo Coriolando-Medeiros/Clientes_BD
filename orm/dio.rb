@@ -48,6 +48,25 @@ module ORM
           
               Infra::Db.new.execute(sql, params)
             end
+
+            def editar(id, atributos = {})
+                self.class.class_variable_set(:@@nome_tabela, DIO::tabela(self.class)) unless self.class.class_variable_defined?(:@@nome_tabela)
+                tabela = self.class.class_variable_get(:@@nome_tabela)
+
+                set_clauses = []
+                params = []
+
+                atributos.each do |coluna, valor|
+                    set_clauses << "#{coluna} = ?"
+                    params << valor
+                end
+
+                params << id
+
+                sql = "UPDATE #{tabela} SET #{set_clauses.join(", ")} WHERE id = ?"
+
+                Infra::Db.new.execute(sql, params)
+            end
         end
           
         module MetodosClasse
