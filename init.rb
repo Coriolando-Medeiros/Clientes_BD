@@ -34,6 +34,10 @@ def fornecedores
   puts table
 end
 
+def validar_cpf(cpf)
+  regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/
+  cpf =~ regex
+end
 
 def validar_telefone(telefone)
   regex = /^(\+55\s)?(\(\d{2}\)\s?|\d{2}\s?)(\d{4,5}[-\s]?\d{4}|\d{4,5}?\d{4}|\d{8,9})$/
@@ -41,7 +45,7 @@ def validar_telefone(telefone)
 end
 
 
-def infos_cliente
+def adicionar_cliente
   cliente = Models::Cliente.new
   puts "Adicionar Cliente"
   print "Nome: "
@@ -56,8 +60,15 @@ def infos_cliente
     end
   end
 
-  print "CPF: "
-  cpf = gets.chomp
+  loop do 
+    print "CPF: (formato: XX.XXX.XXX-XX): "
+    cpf = gets.chomp
+    if validar_cpf(cpf)
+      break
+    else
+      puts "CPF #{cpf} inválido! Tente novamente.".light_red
+    end
+  end
   cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
   puts "Cliente incluido com sucesso!".green
 end
@@ -124,7 +135,7 @@ def excluir_cliente
   end
 end
 
-def infos_fornecedor
+def adicionar_fornecedor
   fornecedor = Models::Fornecedor.new
   puts "Adicionar fornecedor"
   print "Nome: "
@@ -237,7 +248,7 @@ def menu
 
     if opcao == 1
       limpar_tela
-      infos_cliente
+      adicionar_cliente
     elsif opcao == 2
       limpar_tela
       clientes
@@ -251,7 +262,7 @@ def menu
       excluir_cliente
     elsif opcao == 5
       limpar_tela
-      infos_fornecedor
+      adicionar_fornecedor
     elsif opcao == 6
       limpar_tela
       fornecedores
