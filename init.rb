@@ -82,26 +82,30 @@ end
 def excluir_cliente
   puts "Excluir Cliente"
   clientes
-  puts "Informe o ID do Cliente a ser EXCLUIDO!"
+  puts "Informe o ID do Cliente a ser #{'EXCLUIDO!'.light_red}"
   print "Id: "
   id = gets.chomp.to_i
   cliente = Models::Cliente.todos.find { |c| c.id == id}
   if cliente.nil?
     puts "Cliente com ID #{id} não encontrado!"
+    proseguir
+    limpar_tela
     return
   end
 
   limpar_tela
-  puts "Tem certeza que deseja excluir o cliente '#{cliente.nome}'? (S/N)"
+  puts "Tem certeza que deseja #{'EXCLUIR'.light_red} o cliente '#{cliente.nome.green}'? (S/N)"
   confirmacao = gets.chomp.downcase
 
   if confirmacao == 's' || confirmacao == 'sim'
-    #cliente.excluir(cliente.id)
-    puts "Cliente '#{cliente.nome}' excluído com sucesso!".light_red
+    cliente.excluir(cliente.id)
+    puts "Cliente '#{cliente.nome.light_red}' excluído com sucesso!"
     proseguir
+    limpar_tela
   else
     puts "Operação de exclusão cencelada!".green
     proseguir
+    limpar_tela
   end
 end
 
@@ -161,6 +165,37 @@ def editar_fornecedor
   puts "Fornecedor: #{fornecedor.nome} atualizado com sucesso!".green
 end
 
+def excluir_fornecedor
+  puts "Excluir Fornecedor"
+  fornecedores
+  puts "Informe o ID do fornecedor a ser  #{'EXCLUIDO!'.light_red}"
+  print "Id: "
+  id = gets.chomp.to_i
+
+  fornecedor = Models::Fornecedor.todos.find { |f| f.id == id}
+
+  if fornecedor.nil?
+    puts "Cliente com ID #{id} não encontrado!"
+    proseguir
+    limpar_tela
+    return
+  end
+
+  puts "Tem certeza que deseja #{'EXCLUIR'.light_red} o cliente '#{fornecedor.nome.green}'? (S/N)"
+  confirmacao = gets.chomp.downcase
+
+  if confirmacao == 's' || confirmacao == 'sim'
+    fornecedor.excluir(fornecedor.id)
+    puts "Fornecedor '#{fornecedor.nome.light_red}' excluido com sucesso"
+    proseguir
+    limpar_tela
+  else
+    puts "Operação de exclusão cancelada".green
+    proseguir
+    limpar_tela
+  end
+end
+
 def proseguir
   puts "Enter para proseguir".blue
   gets
@@ -212,8 +247,7 @@ def menu
       proseguir
     elsif opcao == 8
       limpar_tela
-      puts "Em implementação"
-      proseguir
+      excluir_fornecedor
     elsif opcao == 0
       limpar_tela
       puts "Saindo...".light_red
