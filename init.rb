@@ -79,6 +79,32 @@ def editar_cliente
   puts "Cliente atualizado com sucesso!".green
 end
 
+def excluir_cliente
+  puts "Excluir Cliente"
+  clientes
+  puts "Informe o ID do Cliente a ser EXCLUIDO!"
+  print "Id: "
+  id = gets.chomp.to_i
+  cliente = Models::Cliente.todos.find { |c| c.id == id}
+  if cliente.nil?
+    puts "Cliente com ID #{id} não encontrado!"
+    return
+  end
+
+  limpar_tela
+  puts "Tem certeza que deseja excluir o cliente '#{cliente.nome}'? (S/N)"
+  confirmacao = gets.chomp.downcase
+
+  if confirmacao == 's' || confirmacao == 'sim'
+    #cliente.excluir(cliente.id)
+    puts "Cliente '#{cliente.nome}' excluído com sucesso!".light_red
+    proseguir
+  else
+    puts "Operação de exclusão cencelada!".green
+    proseguir
+  end
+end
+
 def infos_fornecedor
   fornecedor = Models::Fornecedor.new
   puts "Adicionar fornecedor"
@@ -132,7 +158,7 @@ def editar_fornecedor
   novo_endereco = fornecedor.endereco if novo_endereco.empty?
 
   fornecedor.editar(fornecedor.id, nome: novo_nome, telefone: novo_telefone, cnpj: novo_cnpj, endereco: novo_endereco)
-  puts "Fornecedor: #{fornecedor.novo_nome} atualizado com sucesso!".green
+  puts "Fornecedor: #{fornecedor.nome} atualizado com sucesso!".green
 end
 
 def proseguir
@@ -172,8 +198,7 @@ def menu
       proseguir
     elsif opcao == 4
       limpar_tela
-      puts "Em implementação"
-      proseguir
+      excluir_cliente
     elsif opcao == 5
       limpar_tela
       infos_fornecedor
@@ -201,4 +226,3 @@ def menu
 end
 
 menu
-
