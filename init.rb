@@ -39,6 +39,11 @@ def validar_cpf(cpf)
   cpf =~ regex
 end
 
+def validar_cnpj(cnpj)
+  regex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/
+  cnpj =~ regex
+end
+
 def validar_telefone(telefone)
   regex = /^(\+55\s)?(\(\d{2}\)\s?|\d{2}\s?)(\d{4,5}[-\s]?\d{4}|\d{4,5}?\d{4}|\d{8,9})$/
   telefone =~ regex
@@ -51,22 +56,22 @@ def adicionar_cliente
   print "Nome: "
   nome = gets.chomp
   loop do
-    print "Tel: (formato: (XX) XXXXX-XXXX): "
+    print "Tel: (formato): (XX) XXXXX-XXXX: "
     telefone = gets.chomp
     if validar_telefone(telefone)
       break
     else
-      puts "Telefone #{telefone} inválido! Tente novamente.".light_red
+      puts "Telefone #{telefone.light_red} inválido! Tente novamente."
     end
   end
 
   loop do 
-    print "CPF: (formato: XX.XXX.XXX-XX): "
+    print "CPF: (formato): XXX.XXX.XXX-XX: "
     cpf = gets.chomp
     if validar_cpf(cpf)
       break
     else
-      puts "CPF #{cpf} inválido! Tente novamente.".light_red
+      puts "CPF #{cpf.light_red} inválido! Tente novamente."
     end
   end
   cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
@@ -92,7 +97,7 @@ def editar_cliente
   print "Nome (atual: #{cliente.nome}: )"
   novo_nome = gets.chomp
   novo_nome = cliente.nome if novo_nome.empty?
-
+  
   print "Telefone (atual: #{cliente.telefone}: )"
   novo_telefone = gets.chomp
   novo_telefone = cliente.telefone if novo_telefone.empty?
@@ -139,19 +144,37 @@ def adicionar_fornecedor
   fornecedor = Models::Fornecedor.new
   puts "Adicionar fornecedor"
   print "Nome: "
-  nome = gets.chomp.capitalize
-  print "Tel: "
-  telefone = gets.chomp
-  print "CNPJ: "
-  cnpj = gets.chomp
-  print "Endereço: "
+  nome = gets.chomp
+
+  loop do
+    print "Tel: (formato): (XX) XXXXX-XXXX: "
+    telefone = gets.chomp
+    if validar_telefone(telefone)
+      break
+    else
+      puts "Telefone #{telefone.light_red} inválido! Tente novamente.".light_red
+    end
+  end
+
+  loop do
+    print "CNPJ: (formato): XX.XXX.XXX/XXXX-XX: "
+    cnpj = gets.chomp
+    if validar_cnpj(cnpj)
+      break
+    else
+      puts "CNPJ: #{cnpj.light_red} inválido! Tente novamente."
+    end
+  end
+
+  print "Endereço: (formato): Rua/Av. , nº: "
   endereco = gets.chomp.downcase
   print "Cidade: "
-  cidade = gets.chomp.capitalize
+  cidade = gets.chomp
   print "Estado: "
-  estado = gets.chomp.capitalize
+  estado = gets.chomp
   endereco = "#{endereco} - #{cidade} - #{estado}"
   fornecedor.incluir(nome:nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
+  limpar_tela
 end
 
 def editar_fornecedor
