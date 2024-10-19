@@ -34,13 +34,28 @@ def fornecedores
   puts table
 end
 
+
+def validar_telefone(telefone)
+  regex = /^(\+55\s)?(\(\d{2}\)\s?|\d{2}\s?)(\d{4,5}[-\s]?\d{4}|\d{4,5}?\d{4}|\d{8,9})$/
+  telefone =~ regex
+end
+
+
 def infos_cliente
   cliente = Models::Cliente.new
   puts "Adicionar Cliente"
   print "Nome: "
   nome = gets.chomp
-  print "Tel: "
-  telefone = gets.chomp
+  loop do
+    print "Tel: (formato: (XX) XXXXX-XXXX): "
+    telefone = gets.chomp
+    if validar_telefone(telefone)
+      break
+    else
+      puts "Telefone #{telefone} inválido! Tente novamente.".light_red
+    end
+  end
+
   print "CPF: "
   cpf = gets.chomp
   cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
