@@ -63,10 +63,15 @@ module ORM
 
                 params << id
 
-                debugger
                 sql = "UPDATE #{tabela} SET #{set_clauses.join(", ")} WHERE id = ?"
 
                 Infra::Db.new.execute(sql, params)
+            end
+
+            def excluir(id)
+                tabela = self.class.class_variable_get(:@@nome_tabela)
+                sql = "DELETE FROM #{tabela} WHERE id = ?"
+                Infra::Db.new.execute(sql, [id])
             end
         end
           
