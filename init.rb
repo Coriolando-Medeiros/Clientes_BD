@@ -46,10 +46,11 @@ def infos_cliente
   cliente.incluir(nome: nome, telefone: telefone, cpf: cpf)
   puts "Cliente incluido com sucesso!".green
 end
+
 def editar_cliente
   puts "Editar Cliente"
   clientes
-  puts "Indorme o ID do cliente a ser editado"
+  puts "Informe o ID do cliente a ser editado"
   print "Id: "
   id = gets.chomp.to_i
   cliente = Models::Cliente.todos.find { |c| c.id == id}
@@ -72,7 +73,6 @@ def editar_cliente
 
   print "CPF (atual: #{cliente.cpf}: )"
   nvo_cpf = gets.chomp
-  debugger
   novo_cpf = cliente.cpf if novo_cpf.empty?
 
   cliente.editar(cliente.id, nome: novo_nome, telefone: novo_telefone, cpf: novo_cpf)
@@ -98,6 +98,43 @@ def infos_fornecedor
   fornecedor.incluir(nome:nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
 end
 
+def editar_fornecedor
+  puts "Editar Fornecedor"
+  fornecedores
+  puts "Informe o ID do fornecedor a ser editado"
+  print "Id: "
+  id = gets.chomp.to_i
+  fornecedor = Models::Fornecedor.todos.find { |f| f.id == id}
+
+  if fornecedor.nil?
+    puts "Fornecedor com ID #{id} não encontrado!"
+    return
+  end
+
+  limpar_tela
+  puts "Digite os novos dados do fornecedor"
+  puts "(Enter) para manter"
+  print "Nome (atual): #{fornecedor.nome}: "
+  novo_nome = gets.chomp
+  novo_nome = fornecedor.nome if novo_nome.empty?
+
+  print "Telefone (atual): #{fornecedor.telefone}: "
+  novo_telefone = gets.chomp
+  novo_telefone = fornecedor.telefone if novo_telefone.empty?
+
+  print "CNPJ (atual): #{fornecedor.cnpj}: "
+  novo_cnpj = gets.chomp
+  novo_cnpj = fornecedor.cnpj if novo_cnpj.empty?
+
+  puts "Endereço (atual): #{fornecedor.endereco}"
+  print "Novo endereço: "
+  novo_endereco = gets.chomp
+  novo_endereco = fornecedor.endereco if novo_endereco.empty?
+
+  fornecedor.editar(fornecedor.id, nome: novo_nome, telefone: novo_telefone, cnpj: novo_cnpj, endereco: novo_endereco)
+  puts "Fornecedor: #{fornecedor.novo_nome} atualizado com sucesso!".green
+end
+
 def proseguir
   puts "Enter para proseguir".blue
   gets
@@ -105,7 +142,6 @@ end
 
 def menu
   loop do
-    #limpar_tela
     puts "🌟" + " " * 13 + "Menu" + " " * 13 + "🌟".red
     puts " " * 6 + "========================".blue
     puts " " * 6 + "=========Cliente========".light_blue
@@ -147,7 +183,7 @@ def menu
       proseguir
     elsif opcao == 7
       limpar_tela
-      puts "Em implementação"
+      editar_fornecedor
       proseguir
     elsif opcao == 8
       limpar_tela
