@@ -1,5 +1,6 @@
 require_relative 'models/cliente'
 require_relative 'models/fornecedor'
+require_relative 'estados'
 require 'terminal-table'
 require 'colorize'
 
@@ -146,6 +147,8 @@ def adicionar_fornecedor
   print "Nome: "
   nome = gets.chomp
 
+  # Capturando telefone com validação
+  telefone = nil
   loop do
     print "Tel: (formato): (XX) XXXXX-XXXX: "
     telefone = gets.chomp
@@ -156,6 +159,8 @@ def adicionar_fornecedor
     end
   end
 
+  # Capturando CNPJ com validação
+  cnpj = nil
   loop do
     print "CNPJ: (formato): XX.XXX.XXX/XXXX-XX: "
     cnpj = gets.chomp
@@ -167,15 +172,25 @@ def adicionar_fornecedor
   end
 
   print "Endereço: (formato): Rua/Av. , nº: "
-  endereco = gets.chomp.downcase
+  logradouro = gets.chomp
   print "Cidade: "
   cidade = gets.chomp
-  print "Estado: "
-  estado = gets.chomp
-  endereco = "#{endereco} - #{cidade} - #{estado}"
-  fornecedor.incluir(nome:nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
+
+  # Apresenta a tabela de estados e captura sigla
+  estados = Estados.new
+  sigla_estado = estados.apresenta_tabela
+  
+  endereco = "#{logradouro} - #{cidade} - #{sigla_estado}"
+
+  # Inclui o fornecedor com os dados capturados
+  fornecedor.incluir(nome: nome, telefone: telefone, cnpj: cnpj, endereco: endereco)
+
+  limpar_tela
+  puts "Fornecedor adicionado com sucesso: #{nome.light_red}"
+  proseguir
   limpar_tela
 end
+
 
 def editar_fornecedor
   puts "Editar Fornecedor"
